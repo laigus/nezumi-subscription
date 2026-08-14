@@ -1,0 +1,9 @@
+node_modules/
+release/*
+!release/*.exe
+artifacts/
+outputs/
+__pycache__/
+*.pyc
+*.log
+.DS_Store

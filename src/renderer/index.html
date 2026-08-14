@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; connect-src 'none';" />
+    <title>账耗</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="appShell" class="app-shell">
+      <div class="glass-rim" aria-hidden="true"></div>
+      <header class="titlebar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span><span></span>
+          </div>
+          <div>
+            <strong>账耗</strong>
+            <small>NEZUMI SUBSCRIPTION</small>
+          </div>
+        </div>
+        <div class="titlebar-actions no-drag">
+          <button id="themeButton" class="icon-button subtle" data-tooltip="编辑主题" aria-label="编辑主题">
+            <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18h1.4a1.7 1.7 0 0 0 .5-3.3 1.7 1.7 0 0 1 .5-3.3H18A3 3 0 0 0 21 11.5 8.7 8.7 0 0 0 12 3Z"/><circle cx="7.8" cy="11" r=".7"/><circle cx="10" cy="7.5" r=".7"/><circle cx="14" cy="7" r=".7"/></svg>
+          </button>
+          <button id="soundButton" class="icon-button subtle" data-tooltip="交互音效" aria-label="切换交互音效">
+            <svg viewBox="0 0 24 24"><path d="M5 9v6h4l5 4V5L9 9H5Z"/><path class="sound-wave" d="M17 9a4 4 0 0 1 0 6M19.5 6.5a8 8 0 0 1 0 11"/></svg>
+          </button>
+          <button id="pinButton" class="icon-button subtle" data-tooltip="保持悬浮" aria-label="切换窗口置顶">
+            <svg viewBox="0 0 24 24"><path d="m9 4 6 0-.7 5 3.2 3v1H13l-1 7-1-7H6.5v-1l3.2-3L9 4Z"/></svg>
+          </button>
+          <span class="window-separator"></span>
+          <button id="minimizeButton" class="window-button" aria-label="最小化"><svg viewBox="0 0 24 24"><path d="M6 12h12"/></svg></button>
+          <button id="closeButton" class="window-button close" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></button>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <aside class="sidebar glass-section">
+          <div class="sidebar-heading">
+            <span>类别</span>
+            <button id="manageCategoriesButton" class="mini-button" data-tooltip="管理类别" aria-label="管理类别" data-purpose="manage-categories">
+              <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+            </button>
+          </div>
+          <nav id="categoryNav" class="category-nav" aria-label="账号与订阅类别"></nav>
+
+          <div class="sidebar-spacer"></div>
+          <section class="renewal-card">
+            <div class="renewal-glow"></div>
+            <span class="eyebrow">NEXT RENEWAL</span>
+            <strong id="nextRenewalTitle">暂无订阅</strong>
+            <p id="nextRenewalMeta">添加第一项订阅后，这里会显示最近到期项目。</p>
+          </section>
+          <div class="data-actions">
+            <button id="openDataButton" class="data-button">
+              <svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v9H4V7Z"/></svg>
+              <span>本地保险库</span>
+              <small>Windows 加密</small>
+            </button>
+            <div id="dataMenuWrap" class="data-menu-wrap">
+              <button id="dataMenuButton" class="data-button" aria-label="打开表格导入导出菜单" aria-expanded="false">
+                <svg viewBox="0 0 24 24"><path d="M5 5h14v14H5zM5 10h14M10 5v14"/></svg>
+                <span>表格</span>
+                <small>导入 / 导出</small>
+              </button>
+              <div id="dataMenu" class="data-menu" role="menu" hidden>
+                <button id="importDataOption" class="data-menu-option" role="menuitem">
+                  <svg viewBox="0 0 24 24"><path d="M12 20V9M8 13l4-4 4 4M5 5h14"/></svg><span><strong>导入</strong><small>追加 XLSX</small></span>
+                </button>
+                <button id="exportDataOption" class="data-menu-option" role="menuitem">
+                  <svg viewBox="0 0 24 24"><path d="M12 4v11M8 11l4 4 4-4M5 19h14"/></svg><span><strong>导出</strong><small>分类 XLSX</small></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="content">
+          <div class="content-toolbar">
+            <div>
+              <p class="date-line" id="dateLine"></p>
+              <h1>账号与订阅</h1>
+            </div>
+            <div class="toolbar-actions">
+              <label class="search-box">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+                <input id="searchInput" type="search" placeholder="搜索名称、账号、密码或地址" autocomplete="off" />
+                <kbd>Ctrl K</kbd>
+              </label>
+              <button id="addRecordButton" class="primary-button">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                添加记录
+              </button>
+            </div>
+          </div>
+
+          <section class="stats-grid" aria-label="账号与订阅概览">
+            <article class="stat-card crystal-card accent-blue">
+              <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M6 5h12v14H6zM9 9h6M9 13h4"/></svg></div>
+              <div><span>全部记录</span><strong id="totalStat">0</strong><small id="totalStatCaption">0 订阅 · 0 充值</small></div>
+            </article>
+            <article class="stat-card crystal-card accent-amber">
+              <div class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg></div>
+              <div><span>即将到期</span><strong id="dueStat">0</strong><small id="dueStatCaption">14 天内</small></div>
+            </article>
+            <article class="stat-card crystal-card accent-violet">
+              <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M7 7h10v10H7zM4 12h3M17 12h3"/></svg></div>
+              <div><span>月均支出</span><strong id="spendStat">¥0</strong><small id="spendStatCaption">折合人民币</small></div>
+            </article>
+          </section>
+
+          <div class="list-heading">
+            <div><h2 id="listTitle">全部记录</h2><span id="resultCount">0 项</span></div>
+            <div class="list-controls">
+              <button id="subscriptionFilterButton" class="filter-button" type="button" aria-pressed="false">
+                <svg viewBox="0 0 24 24"><path d="M4 6h16l-6 7v5l-4 2v-7L4 6Z"/></svg>
+                <span>仅看订阅</span>
+              </button>
+              <select id="sortSelect" aria-label="排序方式">
+                <option value="expiry">按到期时间</option>
+                <option value="amount">按金额</option>
+                <option value="name">按名称</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="recordColumnHeadings" class="record-column-headings" hidden>
+            <span>名称 / 类别</span><span>账号 / 密码</span><span>到期 / 状态</span><span>金额 / 账期</span><span>操作</span>
+          </div>
+
+          <div id="recordList" class="record-list"></div>
+        </section>
+      </div>
+    </main>
+
+    <div id="recordModal" class="modal-layer" hidden>
+      <section class="modal-card record-modal" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle">
+        <div class="modal-sheen"></div>
+        <header class="modal-header">
+          <div><span class="eyebrow">RECORD</span><h2 id="recordModalTitle">添加记录</h2></div>
+          <button class="icon-button modal-close" data-close-modal="recordModal" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></button>
+        </header>
+        <form id="recordForm">
+          <input id="recordId" type="hidden" />
+          <div class="form-grid">
+            <label class="field"><span>记录名称 <b>*</b></span><input id="titleInput" maxlength="80" required placeholder="例如：Gmail 或设计工具专业版" /></label>
+            <label class="field"><span>类别</span><select id="categoryInput"></select></label>
+            <label class="field"><span>账号</span><input id="accountInput" autocomplete="off" placeholder="邮箱、用户名或手机号" /></label>
+            <label class="field password-field"><span>密码</span><input id="passwordInput" type="text" autocomplete="off" placeholder="输入密码" /></label>
+            <label class="field span-2"><span>登录 / 订阅地址</span><input id="addressInput" type="url" placeholder="https://example.com/account" /></label>
+            <section class="feature-panel span-2">
+              <label class="feature-toggle" for="hasSubscriptionInput">
+                <span><strong>订阅</strong><small>到期和周期费用</small></span>
+                <input id="hasSubscriptionInput" type="checkbox" /><i class="switch-track" aria-hidden="true"></i>
+              </label>
+              <div id="subscriptionFields" class="feature-content" hidden>
+                <label id="expiryField" class="field"><span>到期日 <b>*</b></span><input id="expiryInput" type="date" /></label>
+                <label id="cycleField" class="field"><span>账期</span><select id="cycleInput"><option value="monthly">每月</option><option value="quarterly">每季度</option><option value="yearly">每年</option><option value="once">一次性</option></select></label>
+                <label id="amountField" class="field amount-field span-2"><span>订阅金额</span><div class="money-wrap"><select id="currencyInput"><option value="CNY">CNY ¥</option><option value="USD">USD $</option><option value="EUR">EUR €</option><option value="JPY">JPY ¥</option><option value="HKD">HKD $</option></select><input id="amountInput" type="number" min="0" step="0.01" value="0" /></div></label>
+              </div>
+            </section>
+            <section class="feature-panel compact-feature span-2">
+              <label class="feature-toggle" for="isPrepaidInput">
+                <span><strong>已充值</strong><small>按量消费</small></span>
+                <input id="isPrepaidInput" type="checkbox" /><i class="switch-track" aria-hidden="true"></i>
+              </label>
+            </section>
+            <label class="field span-2"><span>备注</span><textarea id="notesInput" rows="2" placeholder="用途、套餐信息或自动续费说明等"></textarea></label>
+          </div>
+          <footer class="modal-footer">
+            <button type="button" class="secondary-button" data-close-modal="recordModal">取消</button>
+            <button type="submit" class="primary-button"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 7"/></svg><span>保存记录</span></button>
+          </footer>
+        </form>
+      </section>
+    </div>
+
+    <div id="categoryModal" class="modal-layer" hidden>
+      <section class="modal-card category-modal" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
+        <div class="modal-sheen"></div>
+        <header class="modal-header">
+          <div><span class="eyebrow">ORGANIZE</span><h2 id="categoryModalTitle">管理类别</h2></div>
+          <button class="icon-button modal-close" data-close-modal="categoryModal" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></button>
+        </header>
+        <div id="categoryEditorList" class="category-editor-list"></div>
+        <form id="categoryForm" class="category-add-row">
+          <input id="categoryColorInput" type="color" value="#72A7FF" aria-label="新类别颜色" />
+          <input id="categoryNameInput" maxlength="20" required placeholder="新类别名称" />
+          <button type="submit" class="primary-button compact">添加</button>
+        </form>
+      </section>
+    </div>
+
+    <div id="themeModal" class="modal-layer" hidden>
+      <section class="modal-card theme-modal" role="dialog" aria-modal="true" aria-labelledby="themeModalTitle">
+        <div class="modal-sheen"></div>
+        <header class="modal-header">
+          <div><span class="eyebrow">APPEARANCE</span><h2 id="themeModalTitle">编辑主题</h2></div>
+          <button class="icon-button modal-close" data-close-modal="themeModal" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></svg></button>
+        </header>
+        <section class="theme-control-panel">
+          <div class="theme-control-heading">
+            <div><strong>界面透明度</strong><small>调整玻璃底色，文字、图标和边框保持清晰。</small></div>
+            <output id="interfaceOpacityValue" for="interfaceOpacityInput">100%</output>
+          </div>
+          <input id="interfaceOpacityInput" class="theme-range" type="range" min="50" max="100" step="1" value="100" aria-label="界面透明度" />
+          <div class="theme-range-scale"><span>更通透</span><span>更清晰</span></div>
+        </section>
+        <footer class="modal-footer theme-footer">
+          <button id="resetThemeButton" type="button" class="secondary-button">恢复默认</button>
+          <button type="button" class="primary-button" data-close-modal="themeModal">完成</button>
+        </footer>
+      </section>
+    </div>
+
+    <div id="confirmModal" class="modal-layer confirm-layer" hidden>
+      <section class="modal-card confirm-card" role="alertdialog" aria-modal="true">
+        <div class="confirm-icon"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01"/><path d="M10.3 4.6 3.5 17a2 2 0 0 0 1.8 3h13.4a2 2 0 0 0 1.8-3L13.7 4.6a2 2 0 0 0-3.4 0Z"/></svg></div>
+        <h3 id="confirmTitle">确认操作</h3><p id="confirmMessage"></p>
+        <div class="confirm-actions"><button id="confirmCancel" class="secondary-button">取消</button><button id="confirmAccept" class="danger-button">确认删除</button></div>
+      </section>
+    </div>
+
+    <div id="toastRegion" class="toast-region" aria-live="polite"></div>
+    <script src="renderer.js"></script>
+  </body>
+</html>
