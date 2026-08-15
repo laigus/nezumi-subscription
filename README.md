@@ -21,7 +21,7 @@
 - Node.js 22 或更高版本
 - npm
 
-## 安装
+## 安装依赖
 
 ```powershell
 npm install
@@ -45,30 +45,32 @@ npm test
 - `npm run check`：检查 JavaScript 语法。
 - `npm test`：运行数据、日期、费用、存储、表格和界面静态回归测试。
 
-## 构建
+## 构建 Windows 安装版
 
-生成 Windows x64 单文件程序：
-
-```powershell
-npm run dist
-```
-
-输出目录：`release/`
-
-## 更新桌面快捷方式
-
-将桌面快捷方式更新到 `release` 中版本号最高的程序：
-
-```powershell
-npm run desktop:update
-```
-
-发布新版本时依次执行：
+生成 Windows x64 安装程序：
 
 ```powershell
 npm run dist
-npm run desktop:update
 ```
+
+安装包输出到：
+
+```text
+release/账耗-Setup-<版本号>.exe
+```
+
+`<版本号>` 自动读取 `package.json` 的 `version` 字段。
+
+双击安装包后可选择安装目录；安装程序会创建桌面快捷方式和开始菜单快捷方式。后续通过已安装的应用启动，不再执行单文件便携版的逐次解压流程。
+
+完整的构建与安装流程：
+
+```powershell
+npm install
+npm run dist
+```
+
+随后运行 `release/账耗-Setup-<版本号>.exe` 完成安装。
 
 ## 快捷键
 
@@ -91,7 +93,6 @@ npm run desktop:update
 ```text
 build/          Windows 应用图标
 docs/           架构与数据模型
-scripts/        桌面快捷方式脚本
 src/main/       Electron 主进程与本地存储
 src/renderer/   界面与交互
 src/shared/     公共业务逻辑

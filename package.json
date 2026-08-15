@@ -9,8 +9,7 @@
     "start": "electron .",
     "test": "node --test tests/*.test.cjs",
     "check": "node --check src/main/main.cjs && node --check src/main/store.cjs && node --check src/main/preload.cjs && node --check src/shared/domain.cjs && node --check src/shared/exchange-rates.cjs && node --check src/shared/workbook.cjs && node --check src/shared/window-shape.cjs && node --check src/renderer/renderer.js",
-    "dist": "electron-builder --win portable --x64",
-    "desktop:update": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File scripts/create-desktop-shortcut.ps1"
+    "dist": "electron-builder --win nsis --x64"
   },
   "devDependencies": {
     "electron": "^37.2.6",
@@ -31,18 +30,22 @@
     ],
     "win": {
       "icon": "build/icon.ico",
-      "artifactName": "账耗-${version}-${arch}.${ext}",
       "target": [
         {
-          "target": "portable",
+          "target": "nsis",
           "arch": [
             "x64"
           ]
         }
       ]
     },
-    "portable": {
-      "artifactName": "账耗-${version}.exe"
+    "nsis": {
+      "artifactName": "账耗-Setup-${version}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "账耗"
     }
   },
   "dependencies": {

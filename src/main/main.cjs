@@ -5,7 +5,6 @@ const path = require('node:path');
 const { app, BrowserWindow, dialog, ipcMain, net, Notification, safeStorage, shell } = require('electron');
 const { expiryState, isSafeWebAddress, localDateKey } = require('../shared/domain.cjs');
 const { EXCHANGE_RATE_URL, exchangeRatesNeedRefresh, parseFrankfurterRates } = require('../shared/exchange-rates.cjs');
-const { readReadableWorkbook, writeReadableWorkbook } = require('../shared/workbook.cjs');
 const { roundedWindowShape } = require('../shared/window-shape.cjs');
 const { VaultStore } = require('./store.cjs');
 
@@ -15,11 +14,17 @@ app.disableHardwareAcceleration();
 
 let mainWindow = null;
 let vault = null;
+let workbookModule = null;
 const WINDOW_RADIUS = 28;
 const WINDOW_WIDTH = 1288;
 const WINDOW_HEIGHT = 868;
 const MAX_IMPORT_FILE_BYTES = 25 * 1024 * 1024;
 const EXCHANGE_RATE_TIMEOUT_MS = 6000;
+
+function getWorkbookModule() {
+  workbookModule ||= require('../shared/workbook.cjs');
+  return workbookModule;
+}
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) app.quit();
@@ -164,6 +169,7 @@ function registerIpc() {
     const exportPath = path.extname(result.filePath).toLowerCase() === '.xlsx' ? result.filePath : `${result.filePath}.xlsx`;
     const data = vault.bootstrap();
     try {
+      const { writeReadableWorkbook } = getWorkbookModule();
       const exported = await writeReadableWorkbook(exportPath, data);
       return {
         canceled: false,
@@ -188,6 +194,7 @@ function registerIpc() {
     try {
       const stat = await fs.promises.stat(importPath);
       if (stat.size > MAX_IMPORT_FILE_BYTES) throw new Error('表格不能超过 25 MB');
+      const { readReadableWorkbook } = getWorkbookModule();
       const parsed = await readReadableWorkbook(importPath);
       const imported = vault.importRecords(parsed);
       return {
